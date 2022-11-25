@@ -28,6 +28,7 @@ def notify_interviewer(modeladmim, request, queryset):
 notify_interviewer.short_description = '通知一面面试官'
 notify_interviewer.allowed_permissions =('notify',)
 
+# 导出候选人功能
 def export_model_as_csv(modeladmin, request, queryset):
     response = HttpResponse(content_type='text/csv', charset='utf-8-sig')
     field_list = exportable_fields

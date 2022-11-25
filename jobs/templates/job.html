@@ -1,12 +1,9 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
 
 <div style="margin: auto;width: 58%;">
-
-    <a href="/joblist" style="color: blue">
-        返回职位列表
-    </a>
     <p></p>
     {% if job %}
         <div class="position_name">
@@ -33,7 +30,8 @@
     <br>
 
     <div class="apply_position">
-        <input type="button" style="width: 120px;background-color: #add8e6" value="申请"/>
+        <input type="button" style="width: 120px;background-color: lightblue" value="申请" onclick="location.href='/resume/add/?' +
+                'username={{ user.username }}&apply_position={{ job.job_name }}&city={{ job.city_name }}'"/>
     </div>
 
 {% else %}

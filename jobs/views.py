@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.http import Http404
+from django.views.generic.detail import DetailView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
@@ -28,6 +29,11 @@ def detail(request, job_id):
     except Job.DoesNotExist:
         raise Http404("Job dose not exist")
     return render(request, 'job.html', {'job': job})
+
+class ResumeDetailView(DetailView):
+    """ 简历详情页 """
+    model = Resume
+    template_name = 'resume_detail.html'
 
 class ResumeCreateView(LoginRequiredMixin, CreateView):
     """  简历职位页面  """

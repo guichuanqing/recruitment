@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.db.models import Q
 from django.contrib import messages
+from django.utils.safestring import mark_safe
 
 from interview.models import Candidate
 from interview import candidate_fieldset as cf
@@ -10,6 +11,7 @@ from datetime import datetime
 
 import csv
 # Register your models here.
+from jobs.models import Resume
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +72,7 @@ class CandidateAdmin(admin.ModelAdmin):
         return request.user.has_perm('%s.%s' % (opts.app_label, 'export'))
 
     list_display = (
-        'username', 'city','bachelor_school', 'first_score', 'first_result', 'first_interviewer_user',
+        'username', 'city','bachelor_school', 'get_resume','first_score', 'first_result', 'first_interviewer_user',
         'second_result', 'second_interviewer_user', 'hr_score', 'hr_result', 'last_editor'
     )
 
@@ -90,6 +92,18 @@ class CandidateAdmin(admin.ModelAdmin):
 
     # 列表编辑
     default_list_editable = ('first_interviewer_user', 'second_interviewer_user',)
+
+    # 查看简历
+    def get_resume(self, obj):
+        if not obj.phone:
+            return ''
+        resume = Resume.objects.filter(phone = obj.phone)
+        if resume and len(resume)>0:
+            return mark_safe('<a href="/resume/%s" target="_blank"> %s </a>' % (resume[0].id, '查看简历'))
+        return ''
+
+    get_resume.short_description = '查看简历'
+    get_resume.allow_tags = True
 
     def get_list_editable(self, request):
         group_names = self.get_group_names(request.user)
